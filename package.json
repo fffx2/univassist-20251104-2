@@ -1,0 +1,26 @@
+{
+  "name": "typouniverse-project",
+  "version": "1.0.0",
+  "description": "UNIVASSIST - AI Typography Design Guide Platform",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step required'",
+    "test": "echo 'No tests configured'"
+  },
+  "keywords": [
+    "typography",
+    "design",
+    "ai",
+    "ux",
+    "ui"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "openai": "^4.20.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}
