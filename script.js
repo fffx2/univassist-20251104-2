@@ -234,13 +234,14 @@ function selectColor(color) {
 // AI 가이드 생성 (핵심 기능 - OpenAI API 호출)
 // ============================================
 
+// AI 가이드 생성 (Color System만)
 async function generateGuide() {
     const btn = document.getElementById('generate-btn');
     btn.disabled = true;
-    btn.innerHTML = '<span class="loading"></span> AI 초안 생성 중...';
+    btn.innerHTML = '<span class="loading"></span> AI 가이드 생성 중...';
 
     try {
-        // 🔥 Netlify Function 호출 (OpenAI API 사용)
+        // Netlify 함수 호출
         const response = await fetch('/.netlify/functions/generate-guide', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -253,30 +254,22 @@ async function generateGuide() {
             })
         });
 
-        if (!response.ok) throw new Error(`API Error: ${response.status}`);
-        
+        if (!response.ok) throw new Error(`API request failed`);
         const data = await response.json();
         
-        // ✅ AI 생성 결과를 appState에 저장
-        appState.generatedResult = data;
-        
-        // 화면에 초안 미리보기 표시
-        displayDraftPreview(data);
-        
-        updateAIMessage(`🎉 AI 초안이 생성되었습니다! '유니버설 컬러시스템 실험실' 탭으로 이동하여 색상을 검증하고 수정해보세요.`);
+        // API 응답을 기존 형식으로 변환 (이미 서버에서 변환됨)
+        displayGeneratedGuide(data);
 
     } catch (error) {
-        console.error('AI Generation Error:', error);
-        
-        // Fallback: 로컬 생성
-        const fallbackData = generateLocalFallback();
-        appState.generatedResult = fallbackData;
-        displayDraftPreview(fallbackData);
-        
-        updateAIMessage("⚠️ AI 서버 연결에 실패하여 기본 디자인을 생성했습니다. (Fallback Mode)");
+        console.error('Error fetching AI guide:', error);
+        // API 실패 시 로컬 생성
+        const localData = generateLocalReport();
+        displayGeneratedGuide(localData);
+        updateAIMessage("⚠️ AI 서버 연결에 실패하여 기본 가이드를 생성했습니다.");
     } finally {
         btn.disabled = false;
-        btn.innerHTML = 'AI 초안 생성하기';
+        btn.innerHTML = 'AI 가이드 생성하기';
+        btn.classList.add('hidden');
     }
 }
 
